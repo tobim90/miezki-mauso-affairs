@@ -882,3 +882,10 @@ audio {
         width: 240px;
     }
 }
+
+.story-end .signature {
+    margin-top: 4em;
+    color: var(--accent);
+    font-style: normal;
+    letter-spacing: 0.1em;
+}
