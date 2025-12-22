@@ -288,4 +288,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initAudioPlayer();
     handleScrollAnimations();
     handleParallax();
+    handleIntroFade();
 });
