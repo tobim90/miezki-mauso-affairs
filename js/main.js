@@ -94,11 +94,21 @@ function createParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
     
-    const particleCount = 30;
-
-    for (let i = 0; i < particleCount; i++) {
-        createParticle(container);
-    }
+    let particlesStarted = false;
+    
+    window.addEventListener('scroll', () => {
+        if (particlesStarted) return;
+        
+        // Start particles after scrolling past intro (100vh)
+        if (window.scrollY > window.innerHeight * 0.5) {
+            particlesStarted = true;
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                createParticle(container);
+            }
+        }
+    });
 }
 
 function createParticle(container) {
@@ -143,11 +153,11 @@ function animateParticle(particle, duration, container) {
         const currentY = startY + (endY - startY) * easeProgress;
         
         // Fade in for first 10%, fade out for last 10%
-        let opacity = 0.6;
+        let opacity = 0.3;
         if (progress < 0.1) {
-            opacity = (progress / 0.1) * 0.6;
+            opacity = (progress / 0.1) * 0.3;
         } else if (progress > 0.9) {
-            opacity = ((1 - progress) / 0.1) * 0.6;
+            opacity = ((1 - progress) / 0.1) * 0.3;
         }
         
         particle.style.transform = `translateY(${currentY}px)`;
