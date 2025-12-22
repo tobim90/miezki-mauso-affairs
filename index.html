@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 01</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark: #141414;
+            --gray-dark: #1a1a1a;
+            --gray: #2a2a2a;
+            --gray-mid: #666;
+            --gray-light: #999;
+            --white: #f0f0f0;
+            --cream: #e8e4df;
+            --accent: #c9ff57;
+            --accent-dim: #a8d44a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============ LOADING SEQUENCE ============ */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--gray-light);
+            line-height: 2;
+            letter-spacing: 0.05em;
+        }
+
+        .loader-line {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .loader-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.4s ease;
+        }
+
+        .loader-line .status {
+            color: var(--accent);
+        }
+
+        .loader-line .dots {
+            color: var(--gray-mid);
+        }
+
+        .loader-line.processing .dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .loader-bar {
+            width: 300px;
+            height: 2px;
+            background: var(--gray);
+            margin-top: 40px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .loader-bar.visible {
+            opacity: 1;
+        }
+
+        .loader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .main {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+
+        .main.visible {
+            opacity: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 12vw, 8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .title span {
+            display: block;
+            color: var(--accent);
+        }
+
+        .chapter-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            color: var(--gray-light);
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .chapter-num::before,
+        .chapter-num::after {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--gray);
+        }
+
+        /* Player */
+        .player {
+            width: 100%;
+            max-width: 500px;
+            background: var(--dark);
+            border: 1px solid var(--gray);
+            padding: 40px;
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+        }
+
+        .player-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gray-mid);
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .status-dot.active {
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* Waveform visualization */
+        .waveform {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 60px;
+            margin-bottom: 30px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            background: var(--gray);
+            border-radius: 2px;
+            transition: height 0.15s ease, background 0.3s ease;
+        }
+
+        .wave-bar.active {
+            background: var(--accent);
+        }
+
+        .wave-bar.passed {
+            background: var(--accent-dim);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .btn-secondary {
+            width: 45px;
+            height: 45px;
+            border: 1px solid var(--gray);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--white);
+        }
+
+        .btn-secondary svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--gray-light);
+            transition: fill 0.3s ease;
+        }
+
+        .btn-secondary:hover svg {
+            fill: var(--white);
+        }
+
+        .btn-play {
+            width: 70px;
+            height: 70px;
+            border: 2px solid var(--accent);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-play:hover {
+            background: var(--accent);
+        }
+
+        .btn-play svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--accent);
+            transition: fill 0.3s ease;
+            margin-left: 3px;
+        }
+
+        .btn-play:hover svg {
+            fill: var(--black);
+        }
+
+        .btn-play .pause-icon {
+            display: none;
+            margin-left: 0;
+        }
+
+        .btn-play.playing .play-icon {
+            display: none;
+        }
+
+        .btn-play.playing .pause-icon {
+            display: block;
+        }
+
+        /* Progress */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 2px;
+            background: var(--gray);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-handle {
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .progress-bar:hover .progress-handle {
+            opacity: 1;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: var(--gray-mid);
+            letter-spacing: 0.1em;
+        }
+
+        /* Volume */
+        .volume {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .volume svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--gray-mid);
+        }
+
+        .volume-bar {
+            width: 80px;
+            height: 2px;
+            background: var(--gray);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: var(--gray-light);
+            width: 70%;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray-mid);
+        }
+
+        .footer-text span {
+            color: var(--accent);
+        }
+
+        /* Grain overlay */
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Audio element */
+        audio {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .player {
+                padding: 30px 25px;
+            }
+
+            .loader-content {
+                font-size: 0.75rem;
+                padding: 0 20px;
+            }
+
+            .title {
+                font-size: clamp(2.5rem, 15vw, 5rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grain"></div>
+
+    <!-- Loading Sequence -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-line" id="line1">
+                <span class="dots"></span> initializing<span class="status"></span>
+            </div>
+            <div class="loader-line" id="line2">
+                <span class="dots"></span> decrypting audio<span class="status"></span>
+            </div>
+            <div class="loader-line" id="line3">
+                <span class="dots"></span> loading chapter_01<span class="status"></span>
+            </div>
+            <div class="loader-line" id="line4">
+                <span class="dots"></span> establishing connection<span class="status"></span>
+            </div>
+            <div class="loader-line" id="line5">
+                <span class="dots"></span> ready<span class="status"></span>
+            </div>
+        </div>
+        <div class="loader-bar" id="loaderBar">
+            <div class="loader-bar-fill" id="loaderBarFill"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main" id="main">
+        <header class="header">
+            <p class="tag">für dich / dezember 2024</p>
+            <h1 class="title">
+                Impro
+                <span>visiert</span>
+            </h1>
+            <p class="chapter-num">Kapitel 01</p>
+        </header>
+
+        <div class="player">
+            <div class="player-header">
+                <span>audio.file</span>
+                <div class="player-status">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">standby</span>
+                </div>
+            </div>
+
+            <div class="waveform" id="waveform"></div>
+
+            <div class="controls">
+                <button class="btn-secondary" id="backBtn" aria-label="15 Sekunden zurück">
+                    <svg viewBox="0 0 24 24"><path d="M12.5 3C17.15 3 21.08 6.03 22.45 10.22L20.1 11C19.05 7.81 16.04 5.5 12.5 5.5C10.54 5.5 8.77 6.22 7.38 7.38L10 10H3V3L5.6 5.6C7.45 4 9.85 3 12.5 3M10 12V22H8V14H6V12H10M18 14V20C18 21.11 17.11 22 16 22H14C12.9 22 12 21.1 12 20V14C12 12.9 12.9 12 14 12H16C17.11 12 18 12.9 18 14M14 14V20H16V14H14Z"/></svg>
+                </button>
+                <button class="btn-play" id="playBtn" aria-label="Abspielen">
+                    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button class="btn-secondary" id="forwardBtn" aria-label="15 Sekunden vor">
+                    <svg viewBox="0 0 24 24"><path d="M11.5 3C6.85 3 2.92 6.03 1.55 10.22L3.9 11C4.95 7.81 7.96 5.5 11.5 5.5C13.46 5.5 15.23 6.22 16.62 7.38L14 10H21V3L18.4 5.6C16.55 4 14.15 3 11.5 3M10 12V22H8V14H6V12H10M18 14V20C18 21.11 17.11 22 16 22H14C12.9 22 12 21.1 12 20V14C12 12.9 12.9 12 14 12H16C17.11 12 18 12.9 18 14M14 14V20H16V14H14Z"/></svg>
+                </button>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill">
+                        <div class="progress-handle"></div>
+                    </div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">00:00</span>
+                    <span id="duration">00:00</span>
+                </div>
+            </div>
+
+            <div class="volume">
+                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                <div class="volume-bar" id="volumeBar">
+                    <div class="volume-fill" id="volumeFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p class="footer-text">made with <span>♥</span> for you</p>
+        </footer>
+
+        <!-- Audio Element -->
+        <audio id="audio">
+            <source src="dein-hoerspiel.mp3" type="audio/mpeg">
+        </audio>
+    </main>
+
+    <script>
+        // ============ LOADING SEQUENCE ============
+        const loader = document.getElementById('loader');
+        const main = document.getElementById('main');
+        const loaderBar = document.getElementById('loaderBar');
+        const loaderBarFill = document.getElementById('loaderBarFill');
+
+        const loadingSteps = [
+            { id: 'line1', delay: 0, duration: 800, text: 'initializing', complete: 'ok' },
+            { id: 'line2', delay: 900, duration: 1200, text: 'decrypting audio', complete: 'done' },
+            { id: 'line3', delay: 2200, duration: 1000, text: 'loading chapter_01', complete: 'loaded' },
+            { id: 'line4', delay: 3300, duration: 800, text: 'establishing connection', complete: 'secure' },
+            { id: 'line5', delay: 4200, duration: 600, text: 'ready', complete: '▶' },
+        ];
+
+        function runLoadingSequence() {
+            loadingSteps.forEach((step, index) => {
+                const line = document.getElementById(step.id);
+                
+                // Show line
+                setTimeout(() => {
+                    line.classList.add('visible', 'processing');
+                    
+                    // Update progress bar
+                    loaderBar.classList.add('visible');
+                    const progress = ((index + 0.5) / loadingSteps.length) * 100;
+                    loaderBarFill.style.width = progress + '%';
+                }, step.delay);
+
+                // Complete line
+                setTimeout(() => {
+                    line.classList.remove('processing');
+                    line.querySelector('.status').textContent = ' [' + step.complete + ']';
+                    line.querySelector('.status').style.color = 'var(--accent)';
+                    
+                    // Final progress
+                    const progress = ((index + 1) / loadingSteps.length) * 100;
+                    loaderBarFill.style.width = progress + '%';
+                }, step.delay + step.duration);
+            });
+
+            // Hide loader and show main
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                main.classList.add('visible');
+            }, 5200);
+        }
+
+        // ============ WAVEFORM GENERATION ============
+        function generateWaveform() {
+            const container = document.getElementById('waveform');
+            const barCount = 50;
+            
+            for (let i = 0; i < barCount; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'wave-bar';
+                // Create organic wave pattern
+                const height = 20 + Math.sin(i * 0.3) * 15 + Math.random() * 25;
+                bar.style.height = height + 'px';
+                container.appendChild(bar);
+            }
+        }
+
+        // ============ AUDIO PLAYER ============
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const backBtn = document.getElementById('backBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const volumeBar = document.getElementById('volumeBar');
+        const volumeFill = document.getElementById('volumeFill');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const waveBars = () => document.querySelectorAll('.wave-bar');
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Play/Pause
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.classList.add('playing');
+                statusDot.classList.add('active');
+                statusText.textContent = 'playing';
+            } else {
+                audio.pause();
+                playBtn.classList.remove('playing');
+                statusDot.classList.remove('active');
+                statusText.textContent = 'paused';
+            }
+        });
+
+        // Skip buttons
+        backBtn.addEventListener('click', () => {
+            audio.currentTime = Math.max(0, audio.currentTime - 15);
+        });
+
+        forwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 15);
+        });
+
+        // Progress update
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = progress + '%';
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+
+            // Update waveform visualization
+            const bars = waveBars();
+            const activeIndex = Math.floor((audio.currentTime / audio.duration) * bars.length);
+            bars.forEach((bar, i) => {
+                bar.classList.remove('active', 'passed');
+                if (i < activeIndex) bar.classList.add('passed');
+                if (i === activeIndex) bar.classList.add('active');
+            });
+        });
+
+        // Duration
+        audio.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audio.duration);
+        });
+
+        // Click progress
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        });
+
+        // Volume
+        volumeBar.addEventListener('click', (e) => {
+            const rect = volumeBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.volume = Math.max(0, Math.min(1, percent));
+            volumeFill.style.width = (percent * 100) + '%';
+        });
+
+        // End
+        audio.addEventListener('ended', () => {
+            playBtn.classList.remove('playing');
+            statusDot.classList.remove('active');
+            statusText.textContent = 'ended';
+        });
+
+        // Demo duration if no audio
+        setTimeout(() => {
+            if (!audio.duration || isNaN(audio.duration)) {
+                durationEl.textContent = '24:17';
+            }
+        }, 6000);
+
+        // ============ INIT ============
+        generateWaveform();
+        runLoadingSequence();
+        audio.volume = 0.7;
+    </script>
+</body>
+</html>
