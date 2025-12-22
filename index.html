@@ -11,6 +11,7 @@
 </head>
 <body>
     <div class="grain"></div>
+    <div class="particles" id="particles"></div>
 
     <!-- Password Screen -->
     <div class="password-screen" id="passwordScreen">
@@ -55,69 +56,241 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="main" id="main">
-        <header class="header">
-            <p class="tag">dec 2025</p>
-            <h1 class="title">
-                Impro
-                <span>visiert</span>
-            </h1>
-            <p class="chapter-num">chapter 01</p>
-        </header>
+    <!-- Main Content Wrapper -->
+    <div class="content-wrapper" id="contentWrapper">
 
-        <div class="player">
-            <div class="player-header">
-                <span>audio.file</span>
-                <div class="player-status">
-                    <div class="status-dot" id="statusDot"></div>
-                    <span id="statusText">standby</span>
-                </div>
+        <!-- Intro Section with Fullscreen Video + Typewriter -->
+        <section class="intro-section">
+            <div class="video-background">
+    <video autoplay muted loop playsinline>
+        <source src="https://pub-e683bf1e52cc4a28a5f809f154f8e035.r2.dev/intro-compressed.mp4" type="video/mp4">
+    </video>
+</div>
+            <div class="video-overlay"></div>
+            
+            <div class="typewriter-container">
+                <p class="typewriter">
+                    <span id="typewriter-text"></span><span class="cursor"></span>
+                </p>
             </div>
 
-            <div class="waveform" id="waveform"></div>
+            <p class="intro-scroll-hint">↓</p>
+        </section>
 
-            <div class="controls">
-                <button class="btn-secondary" id="backBtn" aria-label="15 Sekunden zurück">
-                    <svg viewBox="0 0 24 24"><path d="M12.5 3C17.15 3 21.08 6.03 22.45 10.22L20.1 11C19.05 7.81 16.04 5.5 12.5 5.5C10.54 5.5 8.77 6.22 7.38 7.38L10 10H3V3L5.6 5.6C7.45 4 9.85 3 12.5 3M10 12V22H8V14H6V12H10M18 14V20C18 21.11 17.11 22 16 22H14C12.9 22 12 21.1 12 20V14C12 12.9 12.9 12 14 12H16C17.11 12 18 12.9 18 14M14 14V20H16V14H14Z"/></svg>
-                </button>
-                <button class="btn-play" id="playBtn" aria-label="Abspielen">
-                    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                </button>
-                <button class="btn-secondary" id="forwardBtn" aria-label="15 Sekunden vor">
-                    <svg viewBox="0 0 24 24"><path d="M11.5 3C6.85 3 2.92 6.03 1.55 10.22L3.9 11C4.95 7.81 7.96 5.5 11.5 5.5C13.46 5.5 15.23 6.22 16.62 7.38L14 10H21V3L18.4 5.6C16.55 4 14.15 3 11.5 3M10 12V22H8V14H6V12H10M18 14V20C18 21.11 17.11 22 16 22H14C12.9 22 12 21.1 12 20V14C12 12.9 12.9 12 14 12H16C17.11 12 18 12.9 18 14M14 14V20H16V14H14Z"/></svg>
-                </button>
-            </div>
+        <!-- Audio Section -->
+        <section class="audio-section">
+            <header class="header">
+                <p class="tag">dec 2024</p>
+                <h1 class="title">
+                    Impro
+                    <span>visiert</span>
+                </h1>
+                <p class="chapter-num">chapter 01</p>
+            </header>
 
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar">
-                    <div class="progress-fill" id="progressFill">
-                        <div class="progress-handle"></div>
+            <div class="player">
+                <div class="player-header">
+                    <span>audio.file</span>
+                    <div class="player-status">
+                        <div class="status-dot" id="statusDot"></div>
+                        <span id="statusText">standby</span>
                     </div>
                 </div>
-                <div class="time-display">
-                    <span id="currentTime">00:00</span>
-                    <span id="duration">00:00</span>
+
+                <div class="waveform" id="waveform"></div>
+
+                <div class="controls">
+                    <button class="btn-secondary" id="backBtn" aria-label="15 Sekunden zurück">
+                        <svg viewBox="0 0 24 24"><path d="M12.5 3C17.15 3 21.08 6.03 22.45 10.22L20.1 11C19.05 7.81 16.04 5.5 12.5 5.5C10.54 5.5 8.77 6.22 7.38 7.38L10 10H3V3L5.6 5.6C7.45 4 9.85 3 12.5 3M10 12V22H8V14H6V12H10M18 14V20C18 21.11 17.11 22 16 22H14C12.9 22 12 21.1 12 20V14C12 12.9 12.9 12 14 12H16C17.11 12 18 12.9 18 14M14 14V20H16V14H14Z"/></svg>
+                    </button>
+                    <button class="btn-play" id="playBtn" aria-label="Abspielen">
+                        <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <svg class="pause-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </button>
+                    <button class="btn-secondary" id="forwardBtn" aria-label="15 Sekunden vor">
+                        <svg viewBox="0 0 24 24"><path d="M11.5 3C6.85 3 2.92 6.03 1.55 10.22L3.9 11C4.95 7.81 7.96 5.5 11.5 5.5C13.46 5.5 15.23 6.22 16.62 7.38L14 10H21V3L18.4 5.6C16.55 4 14.15 3 11.5 3M10 12V22H8V14H6V12H10M18 14V20C18 21.11 17.11 22 16 22H14C12.9 22 12 21.1 12 20V14C12 12.9 12.9 12 14 12H16C17.11 12 18 12.9 18 14M14 14V20H16V14H14Z"/></svg>
+                    </button>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill">
+                            <div class="progress-handle"></div>
+                        </div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">00:00</span>
+                        <span id="duration">00:00</span>
+                    </div>
+                </div>
+
+                <div class="volume">
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                    <div class="volume-bar" id="volumeBar">
+                        <div class="volume-fill" id="volumeFill"></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="volume">
-                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                <div class="volume-bar" id="volumeBar">
-                    <div class="volume-fill" id="volumeFill"></div>
-                </div>
-            </div>
-        </div>
+            <p class="scroll-hint">↓</p>
 
+            <audio id="audio">
+                <source src="assets/audio/chapter-01.mp3" type="audio/mpeg">
+            </audio>
+        </section>
+
+        <!-- Story Section -->
+        <section class="story-section">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Die Geschichte</h2>
+            </div>
+
+            <div class="story-text">
+                <p>Eilig griff er zur roten Lederjacke an der Garderobe und zog sie an. Seine Lieblingsschuhe, zerfledderte Reeboks, holte er vom Schuhregal an der Haustür und nahm sie mit ins Wohnzimmer. Er wollte sie dort anziehen, denn so konnte er noch schnell seine Mitbewohner um Rat fragen.</p>
+
+                <p class="dialogue">"Müsste ich jetzt nicht die Polizei rufen? Ich mein, sonst ist es ja Fahrerflucht, oder?"</p>
+
+                <p>Eben beim Einparken ist er nämlich an einen Mini gefahren. Dass ihm das passierte, bewertete er als seltsames Schicksal – seine Freunde lobten ihn häufig für seine Einpark-Skills.</p>
+
+                <p class="dialogue">"Ich glaube, offiziell schon, ja... ist es schlimm?"</p>
+
+                <p>Kevin betonte "offiziell" extra und gab sich laissez faire, wie so oft. Er mochte sich in der Rolle des leichten, über den Dingen schwebenden Optimisten. <span class="thought">"Traut er sich nicht, die Schwere der Dinge manchmal zu sehen, oder ist es eine bewusste Entscheidung, so dem Leben zu begegnen?"</span> Beim Binden der Reeboks war dafür jetzt keine Zeit.</p>
+
+                <p class="dialogue">"Das dauert ewig bis die Polizei kommt. Wenn ich das mache, dann müsste ich absagen."</p>
+
+                <p class="dialogue">"Mit wem triffst du dich überhaupt?"</p>
+
+                <p>Mone trug ihre Kuscheljacke. Er konnte die nicht ausstehen. Wie kann man etwas tragen, das aussieht, als hätte man ein Kuscheltier gehäutet? Was ist das eigentlich für eine Einstellung zum Leben, wenn man sich ein Kuscheltier anzieht? Das ebnet doch den Weg in diese gefährliche, ekelerregende Gemütlichkeit.</p>
+
+                <p class="dialogue">"Mit Jojo und einer Freundin von ihr. Das ist die, die ich auf der Vampirparty kennengelernt habe..."</p>
+
+                <p class="dialogue">"Vampirparty... haha."</p>
+
+                <p class="dialogue">"Ich werde einfach einen Zettel mit meiner Handynummer unter den Scheibenwischer klemmen. Dann ist es keine Fahrerflucht, oder?"</p>
+
+                <p>Er hatte die Schuhe jetzt fertig gebunden und wollte los. Eigentlich hatte er nie vor, die Polizei zu rufen und das Treffen <em>deswegen</em> abzusagen. Aber es tut gut, wenn er seinen Plan von seinen Mitbewohnern bestätigt bekommt.</p>
+
+                <p class="dialogue">"Ja, das wird schon. Bub ey... dass du beim Einparken an ein Auto fährst."</p>
+
+                <p>"Ja", er lachte etwas schelmig. "Auf jeden Fall schon mal was zu erzählen, wenn ich gleich dort bin." Er ging in sein Zimmer, riss einen kleinen Zettel ab, kritzelte seine Nummer und "Sorry" hin und hatte direkt ein schlechtes Gewissen, wie mickrig dieser Zettel war – er war wirklich klein und mies schlecht abgerissen – schließlich ist er an einen teuren Mini gefahren. <span class="thought">"Das muss jetzt so passen"</span>, fällte er trotz des Zweifels die Entscheidung in seinem Kopf.</p>
+
+                <p class="dialogue">"Okay, Danke, ich mach los. Schönen Abend euch!"</p>
+
+                <p>Dabei war er schon halb zur Tür draußen und rannte raus zum Auto.</p>
+
+                <p class="divider">• • •</p>
+
+                <p>"Nice, bin jetzt da" tippte er, als er sein Fahrrad angeschlossen hatte und vor der Tür von "Horns Erben" stand. Er hatte Jojo vorher kurz Bescheid gegeben, "er müsse noch was klären" und sie sagte, sie stelle sich schon mal an für die Karten.</p>
+
+                <p class="dialogue">"meine freundin christy sitzt am Tresen<br>chill dich zu ihr )/<br>:)<br>blond mit bier"</p>
+
+                <p>Klammer, Schrägstrich, dann der richtige Smiley, Doppelpunkt Klammer. <span class="thought">"Scheint schnell tippen zu müssen."</span> Er grinste bei "blond mit bier". Lockere Beschreibung. Er reagierte darauf und schrieb "klingt gut".</p>
+
+                <p>Er hatte sich in der Schlange zu den Karten angestellt, ihm war nicht ganz klar, ob die beiden für ihn eine Karte mit geholt hatten oder nicht. Hoffentlich klärt sich das, nicht dass er dann zwei Karten hat.</p>
+
+                <p>In dem Moment kam sie auf ihn zu. Sie schien ihn in all dem Getümmel sofort erkannt zu haben. Er war für eine Sekunde irritiert, weil sie in seiner Erinnerung anders aussah, und gleichzeitig überrascht, wie warm und offen sie ihn begrüßte. <span class="thought">"Sie sieht gut aus"</span>, dachte er sich und fühlte sich direkt wohl. Sie umarmten sich und er folgte ihr zur Bar.</p>
+
+                <p class="divider">• • •</p>
+
+                <p class="dialogue">"Oh, Hallo Herr Mayerhofer."</p>
+
+                <p>Sein Therapeut stand vor ihm. Schwarze Hose, schwarzes T-Shirt.</p>
+
+                <p class="dialogue">"Hallo Herr Riemer."</p>
+
+                <p>Sie reichten sich die Hand. <span class="thought">"Was zur Hölle ist denn hier los?"</span> Er kam nicht klar, wie obskur diese Situation ist. Und komplett in schwarz ist er gekleidet... er wird doch wohl nicht einer der Schauspieler sein?</p>
+
+                <p class="dialogue">"Was machen Sie denn hier?"</p>
+
+                <p class="dialogue">"Ich schau mir das Improtheater an. Erstes Mal."</p>
+
+                <p class="dialogue">"Schön"</p>
+
+                <p>sagte er warm. "Dann viel Spaß gleich da drin." Und ging weiter.</p>
+
+                <p class="dialogue">"Danke, Ihnen auch."</p>
+
+                <p>Jojo stand nur ein paar Stufen weiter unten auf der Treppe. Er war sich nicht sicher, wie viel sie vom Gespräch gehört hatte. <span class="thought">"Ich kann jetzt nicht erzählen, dass das mein Therapeut ist"</span>, entschied er.</p>
+
+                <p class="dialogue">"Wer begrüßt dich denn mit Nachnamen?"</p>
+
+                <p><span class="thought">"Scheiße, sie hat es gehört"</span>, dachte er.</p>
+
+                <p>Er grinste und sagte etwas wie: "Tja, so ist das eben."</p>
+
+                <p>Das Bier, von dem er bereits einiges getrunken hatte und die warme Kneipenatmosphäre halfen ihm, aus der Nummer herauszukommen ohne, dass es seltsam wurde. Sie tat ihm den Gefallen und fragte nicht mehr nach, aber grinste feixend.</p>
+
+                <p class="divider">• • •</p>
+
+                <p><span class="thought">"Das kann doch nicht wahr sein. Was wird hier gespielt?"</span> Er hatte es immer noch nicht verkraftet, seinen Therapeuten auf der Bühne zu sehen. Er war tatsächlich einer der Schauspieler.</p>
+
+                <p><span class="thought">"Wird er gut spielen? Oh Gott, ich glaube es wäre total unangenehm, wenn er nicht gut spielen würde. Obwohl, er ist ja von Beruf Therapeut und nicht Schauspieler... Aber trotzdem..."</span></p>
+
+                <p>Er war sich sicher, das müsste er erst mal verkraften, wenn sein Therapeut nicht gut schauspielern würde. <span class="thought">"Das würde ja einiges über ihn aussagen. Kann ich ihn dann noch ernst nehmen?"</span></p>
+
+                <p>Er schielte zu Jojo rüber. Sie wirkte cool und blickte entspannt auf die Bühne. <span class="thought">"Angenehm, dass sie so entspannt ist."</span> Er war froh, dass sie beide gerade nicht so viel redeten, er musste erst mal klarkommen. <span class="thought">"Das zu durchdenken klappt sowieso nicht, ich ergebe mich diesem Abend."</span></p>
+
+                <p class="divider">• • •</p>
+
+                <p class="dialogue">"Würdest du bitte deinen Ton zügeln!"</p>
+
+                <p>rief sein Therapeut auf der Bühne. Er spielte den Ehemann in einer Szene, in der er und eine andere Schauspielerin ein Ehepaar abgaben, die sehr auf Höflichkeit und emotionale Kontrolle Wert legten. Er war fantastisch darin, diese unterdrückte Wut zu spielen.</p>
+
+                <p>Jojo und er lachten fast immer, zugegebenermaßen sehr laut, an den exakt selben Stellen. <span class="thought">"Gott, wie cool. Endlich jemand, der cool ist und einen tollen Humor hat. Und sein Therapeut scheint denselben Humor zu haben. Was ist das für ein Fiebertraum?"</span></p>
+
+                <p>Sein Therapeut kam ihm vor wie ein Engel, der in sein Leben geschickt wurde und ihn von allem entfernt, was nicht gut ist und ihn zu all dem führt, was gut ist.</p>
+
+                <p class="divider">• • •</p>
+
+                <p>Bier um Bier standen sie später draußen vorm Eingang. Jojo und Christie hatten sichtlich Spaß am Trinken, er auch. Mehrmals boten sie ihm Biere an.</p>
+
+                <p>Er erzählte, dass die Beerdigung seiner Großtante nächste Woche anstand. Was in einem anderen Kontext schwer und ungelenk daherkommen könnte, war leicht und schnell erzählt. Auch der Parkunfall mit dem Mini, an den er bis dahin nicht mehr gedacht hatte. Und dass er früher, direkt gegenüber gewohnt hatte.</p>
+
+                <p>Sie rauschten weiter gemeinsam durch kleine Erzählungen – dass die beiden zusammen wohnen, sich aus Bremen kennen und Christie demnächst heim muss, um Eier einzulegen. "Eier einlegen", das hatte er noch nie gehört.</p>
+
+                <p>Ab und zu driftete er kurz ab und erwischte sich dabei, wie er Jojo musterte. Sie hatten seit der Vampirparty ein paar Mal geschrieben. Es war wie heute: leicht, schön und unbeschwert für ihn, getragen von einem Gefühl, dass sie sich sicher sehen und kennenlernen würden.</p>
+
+                <p>Er mochte sie direkt sehr.</p>
+
+                <p class="story-end">Weiter dachte er nicht. Der Abend hatte ihm zu verstehen gegeben, dass es sowieso nichts bringen würde.</p>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <div class="gallery-header fade-in">
+                <h2 class="section-title">Italien</h2>
+                <p class="gallery-subtitle">sommer 2024</p>
+            </div>
+
+            <div class="gallery-item left">
+                <img src="assets/images/foto-01.jpg" alt="">
+                <p class="gallery-caption">[ caption 1 ]</p>
+            </div>
+
+            <div class="gallery-item right">
+                <img src="assets/images/foto-02.jpg" alt="">
+                <p class="gallery-caption">[ caption 2 ]</p>
+            </div>
+
+            <div class="gallery-item center">
+                <img src="assets/images/foto-03.jpg" alt="">
+                <p class="gallery-caption">[ caption 3 ]</p>
+            </div>
+
+            <div class="gallery-item left">
+                <img src="assets/images/foto-04.jpg" alt="">
+                <p class="gallery-caption">[ caption 4 ]</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
         <footer class="footer">
-            <p class="footer-text">made with <span>♥</span></p>
+            <p class="footer-text">made with <span>♥</span> for you</p>
+            <p class="footer-date">dezember 2024</p>
         </footer>
 
-        <audio id="audio">
-            <source src="assets/audio/chapter-01.mp3" type="audio/mpeg">
-        </audio>
-    </main>
+    </div>
 
     <script src="js/main.js"></script>
 </body>
