@@ -269,16 +269,20 @@ function initAudioPlayer() {
 // ============ INTRO FADE ON SCROLL ============
 function handleIntroFade() {
     const intro = document.querySelector('.intro-section');
-    if (!intro) return;
+    const spacer = document.querySelector('.intro-spacer');
+    if (!intro || !spacer) return;
     
-    window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        const windowHeight = window.innerHeight;
-        
-        // Fade out over the first 100vh of scrolling
-        const opacity = 1 - (scrollY / windowHeight);
-        intro.style.opacity = Math.max(0, opacity);
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            // Calculate how much of the spacer has been scrolled past
+            const ratio = 1 - entry.intersectionRatio;
+            intro.style.opacity = 1 - ratio;
+        });
+    }, {
+        threshold: Array.from({ length: 100 }, (_, i) => i / 100)
     });
+    
+    observer.observe(spacer);
 }
 
 // ============ INIT ============
