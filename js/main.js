@@ -128,8 +128,8 @@ function createParticle(container) {
 
 function animateParticle(particle, duration, container) {
     const startTime = performance.now();
-    const startY = window.innerHeight + 10;
-    const endY = -50;
+    const startY = 0;
+    const endY = -window.innerHeight - 50;
     
     function animate(currentTime) {
         const elapsed = currentTime - startTime;
