@@ -269,20 +269,15 @@ function initAudioPlayer() {
 // ============ INTRO FADE ON SCROLL ============
 function handleIntroFade() {
     const intro = document.querySelector('.intro-section');
-    const spacer = document.querySelector('.intro-spacer');
-    if (!intro || !spacer) return;
+    if (!intro) return;
     
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            // Calculate how much of the spacer has been scrolled past
-            const ratio = 1 - entry.intersectionRatio;
-            intro.style.opacity = 1 - ratio;
-        });
-    }, {
-        threshold: Array.from({ length: 100 }, (_, i) => i / 100)
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const fadeDistance = window.innerHeight * 0.3; // Faded nach 30% des Screens komplett aus
+        
+        const opacity = 1 - (scrollY / fadeDistance);
+        intro.style.opacity = Math.max(0, opacity);
     });
-    
-    observer.observe(spacer);
 }
 
 // ============ INIT ============
