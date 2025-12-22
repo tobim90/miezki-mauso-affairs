@@ -273,7 +273,7 @@ function handleIntroFade() {
     
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
-        const fadeDistance = window.innerHeight * 0.5; // Faded nach 30% des Screens komplett aus
+        const fadeDistance = window.innerHeight * 0.4; // Faded nach 30% des Screens komplett aus
         
         const opacity = 1 - (scrollY / fadeDistance);
         intro.style.opacity = Math.max(0, opacity);
