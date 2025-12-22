@@ -727,6 +727,7 @@ body {
 }
 
 /* ============ FLOATING PARTICLES ============ */
+
 .particles {
     position: fixed;
     top: 0;
@@ -744,10 +745,7 @@ body {
     height: 2px;
     background-color: #c9ff57;
     border-radius: 50%;
-    opacity: 0;
     will-change: transform, opacity;
-    -webkit-animation: floatParticle 15s infinite ease-in-out;
-    animation: floatParticle 15s infinite ease-in-out;
 }
 
 @-webkit-keyframes floatParticle {

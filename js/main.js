@@ -97,27 +97,75 @@ function createParticles() {
     const particleCount = 30;
 
     for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        // Set inline styles for better Safari compatibility
-        const left = Math.random() * 100;
-        const delay = Math.random() * 15;
-        const duration = 10 + Math.random() * 10;
-        const size = 1.5 + Math.random() * 2;
-        
-        particle.style.cssText = `
-            left: ${left}%;
-            width: ${size}px;
-            height: ${size}px;
-            -webkit-animation-delay: ${delay}s;
-            animation-delay: ${delay}s;
-            -webkit-animation-duration: ${duration}s;
-            animation-duration: ${duration}s;
-        `;
-        
-        container.appendChild(particle);
+        createParticle(container);
     }
+}
+
+function createParticle(container) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    
+    const left = Math.random() * 100;
+    const size = 1.5 + Math.random() * 2;
+    const duration = 10000 + Math.random() * 10000;
+    const delay = Math.random() * 10000;
+    
+    particle.style.cssText = `
+        left: ${left}%;
+        width: ${size}px;
+        height: ${size}px;
+        bottom: -10px;
+        opacity: 0;
+    `;
+    
+    container.appendChild(particle);
+    
+    // Start animation after delay
+    setTimeout(() => {
+        animateParticle(particle, duration, container);
+    }, delay);
+}
+
+function animateParticle(particle, duration, container) {
+    const startTime = performance.now();
+    const startY = window.innerHeight + 10;
+    const endY = -50;
+    
+    function animate(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Ease in-out
+        const easeProgress = progress < 0.5 
+            ? 2 * progress * progress 
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        
+        const currentY = startY + (endY - startY) * easeProgress;
+        
+        // Fade in for first 10%, fade out for last 10%
+        let opacity = 0.6;
+        if (progress < 0.1) {
+            opacity = (progress / 0.1) * 0.6;
+        } else if (progress > 0.9) {
+            opacity = ((1 - progress) / 0.1) * 0.6;
+        }
+        
+        particle.style.transform = `translateY(${currentY}px)`;
+        particle.style.opacity = opacity;
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            // Reset and restart
+            particle.style.opacity = 0;
+            const newDelay = Math.random() * 5000;
+            setTimeout(() => {
+                animateParticle(particle, 10000 + Math.random() * 10000, container);
+            }, newDelay);
+        }
+    }
+    
+    requestAnimationFrame(animate);
 }
 
 // ============ SCROLL ANIMATIONS ============
