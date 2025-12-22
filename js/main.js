@@ -68,7 +68,7 @@ function runLoadingSequence() {
         loader.classList.add('hidden');
         contentWrapper.classList.add('visible');
         // Start typewriter after content is visible
-        setTimeout(typeWriter, 500);
+        setTimeout(typeWriter, 1500);
     }, 5200);
 }
 
@@ -273,91 +273,11 @@ function handleIntroFade() {
     
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
-        const fadeDistance = window.innerHeight * 0.4;
+        const fadeDistance = window.innerHeight * 0.4; // Faded nach 30% des Screens komplett aus
         
         const opacity = 1 - (scrollY / fadeDistance);
         intro.style.opacity = Math.max(0, opacity);
     });
-}
-
-// ============ CURSOR FADEOUT AFTER TYPING ============
-function setupCursorFadeout() {
-    const cursor = document.querySelector('.typewriter .cursor');
-    if (!cursor) return;
-    
-    // After typewriter finishes, blink a few more times then fade
-    setTimeout(() => {
-        cursor.style.transition = 'opacity 2s ease';
-        cursor.style.opacity = '0';
-    }, 5000);
-}
-
-// ============ SECRET LOVE MESSAGE ============
-function setupSecretMessage() {
-    const storyEnd = document.querySelector('.story-end');
-    if (!storyEnd) return;
-    
-    let hoverTimer = null;
-    let messageShown = false;
-    
-    // Create the secret message element
-    const secretMsg = document.createElement('p');
-    secretMsg.className = 'secret-message';
-    secretMsg.innerHTML = '...aber er wusste schon da, dass sie die Richtige ist. ♥';
-    secretMsg.style.cssText = `
-        margin-top: 3em;
-        font-style: italic;
-        color: #c9ff57;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 1.5s ease, transform 1.5s ease;
-        font-size: 0.95rem;
-        letter-spacing: 0.05em;
-    `;
-    
-    storyEnd.parentNode.insertBefore(secretMsg, storyEnd.nextSibling);
-    
-    // Reveal after viewing the last paragraph for 3 seconds
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !messageShown) {
-                hoverTimer = setTimeout(() => {
-                    secretMsg.style.opacity = '1';
-                    secretMsg.style.transform = 'translateY(0)';
-                    messageShown = true;
-                    
-                    // Add a subtle glow pulse
-                    setTimeout(() => {
-                        secretMsg.style.textShadow = '0 0 20px rgba(201, 255, 87, 0.5)';
-                    }, 1500);
-                }, 3000);
-            } else {
-                if (hoverTimer && !messageShown) {
-                    clearTimeout(hoverTimer);
-                }
-            }
-        });
-    }, { threshold: 0.8 });
-    
-    observer.observe(storyEnd);
-}
-
-// ============ GLITCH EFFECT ON TITLE ============
-function setupTitleGlitch() {
-    const title = document.querySelector('.title');
-    if (!title) return;
-    
-    // Random subtle glitch every 10-20 seconds
-    function glitch() {
-        title.style.textShadow = '2px 0 #c9ff57, -2px 0 #ff6b6b';
-        setTimeout(() => {
-            title.style.textShadow = 'none';
-        }, 100);
-        
-        setTimeout(glitch, 10000 + Math.random() * 10000);
-    }
-    
-    setTimeout(glitch, 8000);
 }
 
 // ============ INIT ============
@@ -368,7 +288,4 @@ document.addEventListener('DOMContentLoaded', () => {
     handleScrollAnimations();
     handleParallax();
     handleIntroFade();
-    setupCursorFadeout();
-    setupSecretMessage();
-    setupTitleGlitch();
 });
