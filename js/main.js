@@ -68,7 +68,7 @@ function runLoadingSequence() {
         loader.classList.add('hidden');
         contentWrapper.classList.add('visible');
         // Start typewriter after content is visible
-        setTimeout(typeWriter, 500);
+        setTimeout(typeWriter, 1500);
     }, 5200);
 }
 
@@ -264,6 +264,21 @@ function initAudioPlayer() {
     }, 6000);
 
     audio.volume = 0.7;
+}
+
+// ============ INTRO FADE ON SCROLL ============
+function handleIntroFade() {
+    const intro = document.querySelector('.intro-section');
+    if (!intro) return;
+    
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        
+        // Fade out over the first 100vh of scrolling
+        const opacity = 1 - (scrollY / windowHeight);
+        intro.style.opacity = Math.max(0, opacity);
+    });
 }
 
 // ============ INIT ============
