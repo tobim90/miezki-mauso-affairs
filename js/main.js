@@ -89,20 +89,33 @@ function typeWriter() {
     type();
 }
 
-// ============ FLOATING PARTICLES ============
+// ============ FLOATING PARTICLES (Safari compatible) ============
 function createParticles() {
     const container = document.getElementById('particles');
-    const particleCount = 28;
+    if (!container) return;
+    
+    const particleCount = 30;
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 15 + 's';
-        particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+        
+        // Set inline styles for better Safari compatibility
+        const left = Math.random() * 100;
+        const delay = Math.random() * 15;
+        const duration = 10 + Math.random() * 10;
         const size = 1.5 + Math.random() * 2;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
+        
+        particle.style.cssText = `
+            left: ${left}%;
+            width: ${size}px;
+            height: ${size}px;
+            -webkit-animation-delay: ${delay}s;
+            animation-delay: ${delay}s;
+            -webkit-animation-duration: ${duration}s;
+            animation-duration: ${duration}s;
+        `;
+        
         container.appendChild(particle);
     }
 }

@@ -201,49 +201,21 @@ body {
     opacity: 1;
 }
 
-/* ============ INTRO SECTION ============ */
+/* ============ INTRO SECTION (Fixed for parallax) ============ */
 .intro-section {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.video-background {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-}
-
-.video-background video,
-.video-background .video-placeholder {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.video-background .video-placeholder {
-    background: var(--dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-mid);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-}
-
-.video-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(10, 10, 10, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 1;
+    background: var(--black);
 }
 
 .typewriter-container {
-    position: relative;
-    z-index: 2;
     text-align: center;
 }
 
@@ -275,7 +247,6 @@ body {
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 2;
     font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -283,7 +254,12 @@ body {
     animation: pulse 2s ease-in-out infinite;
 }
 
-/* ============ AUDIO SECTION ============ */
+/* Spacer to push content down */
+.intro-spacer {
+    height: 100vh;
+}
+
+/* ============ AUDIO SECTION (Scrolls over intro) ============ */
 .audio-section {
     min-height: 100vh;
     display: flex;
@@ -291,6 +267,9 @@ body {
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
+    position: relative;
+    z-index: 10;
+    background: var(--black);
 }
 
 .header {
@@ -575,6 +554,9 @@ body {
     padding: 120px 40px;
     max-width: 800px;
     margin: 0 auto;
+    position: relative;
+    z-index: 10;
+    background: var(--black);
 }
 
 .section-header {
@@ -665,6 +647,9 @@ body {
     padding: 120px 20px;
     max-width: 1000px;
     margin: 0 auto;
+    position: relative;
+    z-index: 10;
+    background: var(--black);
 }
 
 .gallery-header {
@@ -744,7 +729,10 @@ body {
 /* ============ FLOATING PARTICLES ============ */
 .particles {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     z-index: 100;
     overflow: hidden;
@@ -754,14 +742,35 @@ body {
     position: absolute;
     width: 2px;
     height: 2px;
-    background: var(--accent);
+    background-color: #c9ff57;
     border-radius: 50%;
     opacity: 0;
-    animation: float 15s infinite ease-in-out;
+    will-change: transform, opacity;
+    -webkit-animation: floatParticle 15s infinite ease-in-out;
+    animation: floatParticle 15s infinite ease-in-out;
 }
 
-@keyframes float {
-    0%, 100% {
+@-webkit-keyframes floatParticle {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(100vh) scale(0);
+        transform: translateY(100vh) scale(0);
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 0;
+        -webkit-transform: translateY(-20vh) scale(1);
+        transform: translateY(-20vh) scale(1);
+    }
+}
+
+@keyframes floatParticle {
+    0% {
         opacity: 0;
         transform: translateY(100vh) scale(0);
     }
@@ -781,6 +790,9 @@ body {
 .footer {
     padding: 100px 20px;
     text-align: center;
+    position: relative;
+    z-index: 10;
+    background: var(--black);
 }
 
 .footer-text {
