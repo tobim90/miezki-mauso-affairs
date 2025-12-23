@@ -6,7 +6,7 @@
   <title>SprachWerk Leipzig — Deutsch für Unternehmen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,6 +28,150 @@
       --purple-subtle: #f5f3ff;
       --accent-orange: #fb923c; 
       --accent-orange-glow: rgba(251, 146, 60, 0.4);
+    }
+
+    /* ============ LOADER SCREEN ============ */
+    .loader-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .loader-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-container {
+      text-align: center;
+      max-width: 400px;
+      padding: 40px;
+    }
+
+    .loader-content {
+      margin-bottom: 40px;
+    }
+
+    .loader-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .loader-line.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .loader-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--gray-300);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .loader-line.active .loader-dot {
+      background: #a78bfa;
+      box-shadow: 0 0 12px rgba(167, 139, 250, 0.5);
+    }
+
+    .loader-line.done .loader-dot {
+      background: #fb923c;
+      box-shadow: 0 0 12px rgba(251, 146, 60, 0.5);
+    }
+
+    .loader-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--gray-500);
+      letter-spacing: 0.02em;
+      transition: color 0.3s ease;
+      text-align: left;
+    }
+
+    .loader-line.active .loader-text {
+      color: var(--gray-700);
+    }
+
+    .loader-line.done .loader-text {
+      color: var(--gray-900);
+    }
+
+    .loader-status {
+      margin-left: auto;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: #fb923c;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .loader-line.done .loader-status {
+      opacity: 1;
+    }
+
+    .loader-progress {
+      width: 100%;
+      height: 3px;
+      background: var(--gray-200);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    .loader-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #a78bfa 0%, #fb923c 100%);
+      border-radius: 100px;
+      transition: width 0.4s ease;
+    }
+
+    .ready-button {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: white;
+      background: linear-gradient(135deg, #a78bfa 0%, #fb923c 100%);
+      border: none;
+      padding: 12px 32px;
+      border-radius: 100px;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px) scale(0.9);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 30px rgba(167, 139, 250, 0.25);
+    }
+
+    .ready-button.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .ready-button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 20px 50px rgba(167, 139, 250, 0.4);
+    }
+
+    .ready-button:active {
+      transform: scale(0.98);
     }
 
     html { scroll-behavior: auto; }
@@ -190,24 +334,19 @@
       display: grid; 
       grid-template-columns: repeat(2, 1fr); 
       gap: 32px; 
-      /* Extra Platz unten damit die verschobenen Elemente nicht abgeschnitten werden */
       margin-bottom: 60px; 
     }
     
     .service-card { position: relative; padding: 40px; background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 24px; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.05); }
 
-    /* RECHTE SPALTE (Gerade Elemente): Nach unten versetzen mittels Transform */
     .service-card:nth-child(even) {
        transform: translateY(60px);
     }
     
-    /* Farben für die lila Karten (jedes 2. Paar) */
     .service-card:nth-child(4n), .service-card:nth-child(4n-1) { background: rgba(167, 139, 250, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px -4px rgba(167, 139, 250, 0.3); }
     .service-card:nth-child(4n) .service-title, .service-card:nth-child(4n) .service-text, .service-card:nth-child(4n-1) .service-title, .service-card:nth-child(4n-1) .service-text { color: var(--white); }
     .service-card:nth-child(4n) .serif-italic, .service-card:nth-child(4n-1) .serif-italic { background: none; -webkit-text-fill-color: var(--white); color: var(--white); }
     
-    /* HOVER (muss Transform berücksichtigen) */
-    /* Linke Spalte (Ungerade) hebt sich normal an */
     .service-card:nth-child(odd):hover {
        transform: translateY(-8px);
        box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.1); 
@@ -215,15 +354,13 @@
        border-color: rgba(255, 255, 255, 0.9);
     }
     
-    /* Rechte Spalte (Gerade) hebt sich von der 60px Position an */
     .service-card:nth-child(even):hover {
-       transform: translateY(52px); /* 60px - 8px = 52px */
+       transform: translateY(52px);
        box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.1); 
        background: rgba(255, 255, 255, 0.6); 
        border-color: rgba(255, 255, 255, 0.9);
     }
 
-    /* Hover Styles für die Lila Karten */
     .service-card:nth-child(4n):hover, .service-card:nth-child(4n-1):hover { background: rgba(151, 117, 250, 0.95); box-shadow: 0 20px 40px -4px rgba(167, 139, 250, 0.4); border-color: rgba(255, 255, 255, 0.5); }
     
     .service-icon { display: none; }
@@ -423,11 +560,9 @@
       .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
       .process-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
       .levels-grid { flex-wrap: wrap; }
-      /* Services Mobile */
       .services-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; gap: 24px; }
-      .service-card:nth-child(even) { transform: none; } /* Reset Transform on Mobile */
-      .service-card:nth-child(even):hover { transform: translateY(-8px); } /* Reset Hover */
-      
+      .service-card:nth-child(even) { transform: none; }
+      .service-card:nth-child(even):hover { transform: translateY(-8px); }
       .footer-container { grid-template-columns: 1fr 1fr; gap: 48px; }
     }
 
@@ -456,11 +591,50 @@
       .service-card { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
       .footer-container { grid-template-columns: 1fr; gap: 40px; }
       .footer-bottom { flex-direction: column-reverse; gap: 24px; text-align: center; margin-top: 40px; }
+      
+      .loader-container { padding: 24px; }
+      .loader-text { font-size: 13px; }
     }
   </style>
 </head>
 
 <body id="top">
+  <!-- ============ LOADER SCREEN ============ -->
+  <div class="loader-screen" id="loaderScreen">
+    <div class="loader-container">
+      <div class="loader-content">
+        <div class="loader-line" id="line1">
+          <span class="loader-dot"></span>
+          <span class="loader-text">verbindung wird hergestellt</span>
+          <span class="loader-status">✓</span>
+        </div>
+        <div class="loader-line" id="line2">
+          <span class="loader-dot"></span>
+          <span class="loader-text">sprachdaten laden</span>
+          <span class="loader-status">✓</span>
+        </div>
+        <div class="loader-line" id="line3">
+          <span class="loader-dot"></span>
+          <span class="loader-text">überraschung vorbereiten</span>
+          <span class="loader-status">✓</span>
+        </div>
+        <div class="loader-line" id="line4">
+          <span class="loader-dot"></span>
+          <span class="loader-text">alles bereit</span>
+          <span class="loader-status">✓</span>
+        </div>
+      </div>
+      
+      <div class="loader-progress">
+        <div class="loader-progress-fill" id="progressFill"></div>
+      </div>
+      
+      <button class="ready-button" id="readyButton">
+        Ready?
+      </button>
+    </div>
+  </div>
+
   <a href="#kontakt" class="discount-badge">
     <span class="discount-icon">%</span>
     <div class="discount-text-container">
@@ -625,14 +799,13 @@
           <p class="service-text">Ihr Team funktioniert? Helfen Sie Ihren Mitarbeitern ihr Leben in Deutschland schöner zu machen.</p>
         </div>
         <div class="hero-buttons" style="grid-column: 1 / -1; justify-content: center; margin-top: 40px; margin-bottom: 0;">
-  <a href="#kontakt" class="btn btn-primary">
-    Kostenlose Beratung
-    <span class="btn-arrow">
-      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-    </span>
-  </a> 
-</div>
-        
+          <a href="#kontakt" class="btn btn-primary">
+            Kostenlose Beratung
+            <span class="btn-arrow">
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </span>
+          </a> 
+        </div>
       </div>
     </div>
   </section>
@@ -663,32 +836,24 @@
             <div class="personal-feature">
               <div class="personal-feature-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
               <div>
                 <h4 class="personal-feature-title">Maßgeschneiderter Lehrplan</h4>
-                <p class="personal-feature-text">
-                  Der Unterricht basiert auf echten Dokumenten, E-Mails und Meetings aus Ihrem Unternehmen.
-                </p>
+                <p class="personal-feature-text">Der Unterricht basiert auf echten Dokumenten, E-Mails und Meetings aus Ihrem Unternehmen.</p>
               </div>
             </div>
 
             <div class="personal-feature">
               <div class="personal-feature-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
+                  <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </div>
               <div>
                 <h4 class="personal-feature-title">Kontinuierliche Anpassung</h4>
-                <p class="personal-feature-text">
-                  Der Lehrplan entwickelt sich mit – basierend auf Feedback und neuen Anforderungen.
-                </p>
+                <p class="personal-feature-text">Der Lehrplan entwickelt sich mit – basierend auf Feedback und neuen Anforderungen.</p>
               </div>
             </div>
           </div>
@@ -722,13 +887,13 @@
       </div>
     </div>
     <div class="hero-buttons" style="width: 100%; justify-content: center; margin-top: 20px; margin-bottom: 0;">
-  <a href="#kontakt" class="btn btn-primary">
-    Kostenlose Beratung
-    <span class="btn-arrow">
-      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-    </span>
-  </a> 
-</div>
+      <a href="#kontakt" class="btn btn-primary">
+        Kostenlose Beratung
+        <span class="btn-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+        </span>
+      </a> 
+    </div>
   </section>
 
   <section class="process" id="ablauf">
@@ -983,13 +1148,57 @@
     </div>
   </footer>
 
- <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
 
   <script>
-    // 2. Lenis initialisieren
+    // ============ LOADER SEQUENCE ============
+    document.addEventListener('DOMContentLoaded', function() {
+      const loaderScreen = document.getElementById('loaderScreen');
+      const readyButton = document.getElementById('readyButton');
+      const progressFill = document.getElementById('progressFill');
+      const lines = [
+        document.getElementById('line1'),
+        document.getElementById('line2'),
+        document.getElementById('line3'),
+        document.getElementById('line4')
+      ];
+      
+      let currentLine = 0;
+      const totalLines = lines.length;
+      
+      function animateLine() {
+        if (currentLine < totalLines) {
+          lines[currentLine].classList.add('active');
+          
+          const progress = ((currentLine + 1) / totalLines) * 100;
+          progressFill.style.width = progress + '%';
+          
+          setTimeout(() => {
+            lines[currentLine].classList.add('done');
+            currentLine++;
+            
+            if (currentLine < totalLines) {
+              setTimeout(animateLine, 400);
+            } else {
+              setTimeout(() => {
+                readyButton.classList.add('visible');
+              }, 500);
+            }
+          }, 600);
+        }
+      }
+      
+      setTimeout(animateLine, 500);
+      
+      readyButton.addEventListener('click', function() {
+        loaderScreen.classList.add('hidden');
+      });
+    });
+
+    // ============ LENIS SMOOTH SCROLL ============
     const lenis = new Lenis({
       duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing-Funktion für den "Merlin"-Look
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       direction: 'vertical',
       gestureDirection: 'vertical',
       smooth: true,
@@ -998,26 +1207,24 @@
       touchMultiplier: 2,
     });
 
-    // 3. Animation Loop starten
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
 
-    // OPTIONAL: Deine Anker-Links (z.B. "Kontakt") mit Lenis verknüpfen
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const targetId = this.getAttribute('href');
         const target = document.querySelector(targetId);
         if (target) {
-          // Lenis übernimmt das Scrollen zum Ziel
           lenis.scrollTo(target);
         }
       });
     });
       
+    // ============ REVEAL ANIMATIONS ============
     const reveals = document.querySelectorAll('.reveal');
 
     function handleReveal() {
@@ -1033,7 +1240,6 @@
     handleReveal();
 
     // ============ SUBTLE MOTION ============
-    // Gentle floating for hero image wrapper
     const heroImageWrapper = document.querySelector('.hero-image-wrapper');
     let time = 0;
 
@@ -1047,7 +1253,7 @@
     }
     gentleFloat();
 
-    // Counter animation for stats
+    // ============ COUNTER ANIMATION ============
     const stats = document.querySelectorAll('.hero-stat-number');
 
     function animateCounter(el, target, duration = 2500) {
@@ -1093,7 +1299,7 @@
 
     stats.forEach(stat => statsObserver.observe(stat));
 
-    // Stagger animation for service cards
+    // ============ SERVICE CARDS STAGGER ============
     const serviceCards = document.querySelectorAll('.service-card');
     const serviceObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1114,7 +1320,7 @@
       serviceObserver.observe(card);
     });
 
-    // Stagger for process steps
+    // ============ PROCESS STEPS STAGGER ============
     const processSteps = document.querySelectorAll('.process-step');
     const processObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1135,7 +1341,7 @@
       processObserver.observe(step);
     });
 
-    // Arrow animation on button hover
+    // ============ BUTTON ARROW ANIMATION ============
     const arrowBtns = document.querySelectorAll('.btn-arrow');
     arrowBtns.forEach(arrow => {
       const btn = arrow.parentElement;
@@ -1154,7 +1360,6 @@
     if (hello) {
       function runGradient() {
         hello.classList.add('is-animating');
-
         setTimeout(() => {
           hello.classList.remove('is-animating');
         }, 1800); 
