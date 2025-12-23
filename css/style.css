@@ -889,3 +889,58 @@ audio {
     font-style: normal;
     letter-spacing: 0.1em;
 }
+
+
+/* ============ SURPRISE BUTTON ============ */
+.surprise-button-container {
+    display: flex;
+    justify-content: center;
+    padding: 80px 24px 40px;
+}
+
+.surprise-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 32px;
+    background: transparent;
+    border: 1px solid var(--gray-mid);
+    border-radius: 4px;
+    color: var(--white);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.surprise-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transition: left 0.5s ease;
+}
+
+.surprise-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(201, 255, 87, 0.15);
+}
+
+.surprise-button:hover::before {
+    left: 100%;
+}
+
+.surprise-arrow {
+    transition: transform 0.3s ease;
+}
+
+.surprise-button:hover .surprise-arrow {
+    transform: translateX(4px);
+}
