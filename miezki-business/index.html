@@ -322,6 +322,57 @@
     .gradient-animate { position: relative; display: inline-block; background: linear-gradient(120deg, #18181b 0%, #18181b 40%, var(--accent-orange) 50%, #a78bfa 60%, #18181b 100%); background-size: 300% 100%; background-position: 0% 50%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent; transition: background-position 1.8s cubic-bezier(0.16, 1, 0.3, 1); }
     .gradient-animate.is-animating { background-position: 100% 50%; }
 
+    /* ============ TYPING SHOWCASE ============ */
+    .typing-showcase {
+      padding: 80px 0;
+      background: var(--gray-50);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .typing-showcase-container {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .typing-showcase-text {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--gray-900);
+    }
+
+    .typing-showcase-word {
+      background: linear-gradient(135deg, #a78bfa 0%, var(--accent-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .typing-showcase-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--accent-orange);
+      margin-left: 2px;
+      animation: showcaseBlink 0.8s infinite;
+      vertical-align: text-bottom;
+      border-radius: 2px;
+    }
+
+    @keyframes showcaseBlink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .typing-showcase {
+        padding: 60px 0;
+      }
+    }
+
     /* ============ SERVICES - HORIZONTAL SCROLL ============ */
     .services { 
       background: var(--white); 
@@ -958,11 +1009,21 @@
     </div>
   </section>
 
+  <section class="typing-showcase">
+    <div class="container">
+      <div class="typing-showcase-container">
+        <p class="typing-showcase-text">
+          Wir trainieren <span class="typing-showcase-word" id="showcaseTyping">Kundengespräche</span><span class="typing-showcase-cursor"></span>
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section class="services" id="leistungen">
     <div class="container">
       <div class="services-header reveal">
         <p class="section-label">Leistungen</p>
-        <h2 class="section-title">Was wir <span class="serif-italic">anbieten</span></h2>
+        <h2 class="section-title">Leistungen, so <span class="serif-italic">individuell</span> wie Sie</h2>
         <p class="section-subtitle">Flexible Kursformate, die sich Ihrem Unternehmen anpassen.</p>
       </div>
     </div>
@@ -1097,7 +1158,7 @@
     <div class="container">
       <div class="process-header reveal">
         <p class="section-label">Ablauf</p>
-        <h2 class="section-title">Wir nehmen Sie an die Hand</h2>
+        <h2 class="section-title">Lassen Sie sich an die Hand nehmen</h2>
         <p class="section-subtitle">Von der Anfrage bis zum ersten Kurstag in vier einfachen Schritten.</p>
       </div>
       <div class="process-grid">
@@ -1638,6 +1699,60 @@
         }
       });
     });
+
+    // ============ TYPING SHOWCASE EFFECT ============
+    const showcaseElement = document.getElementById('showcaseTyping');
+    const showcaseTopics = [
+      'Kundengespräche',
+      'Verhandlungen', 
+      'Präsentationen',
+      'E-Mail-Kommunikation',
+      'Telefonate',
+      'Onboarding',
+      'Teamkommunikation'
+    ];
+    let showcaseIndex = 0;
+    let showcaseCharIndex = 0;
+    let showcaseDeleting = false;
+    let showcaseSpeed = 50;
+
+    function showcaseTypeEffect() {
+      const currentTopic = showcaseTopics[showcaseIndex];
+      
+      if (showcaseDeleting) {
+        showcaseElement.textContent = currentTopic.substring(0, showcaseCharIndex - 1);
+        showcaseCharIndex--;
+        showcaseSpeed = 30;
+      } else {
+        showcaseElement.textContent = currentTopic.substring(0, showcaseCharIndex + 1);
+        showcaseCharIndex++;
+        showcaseSpeed = 50;
+      }
+
+      if (!showcaseDeleting && showcaseCharIndex === currentTopic.length) {
+        showcaseSpeed = 1500;
+        showcaseDeleting = true;
+      } else if (showcaseDeleting && showcaseCharIndex === 0) {
+        showcaseDeleting = false;
+        showcaseIndex = (showcaseIndex + 1) % showcaseTopics.length;
+        showcaseSpeed = 200;
+      }
+
+      setTimeout(showcaseTypeEffect, showcaseSpeed);
+    }
+
+    const showcaseObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setTimeout(showcaseTypeEffect, 500);
+          showcaseObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    if (showcaseElement) {
+      showcaseObserver.observe(showcaseElement);
+    }
 
     // ============ HELLO LEIPZIG GRADIENT PULSE ============
     const hello = document.getElementById('hello-leipzig');
