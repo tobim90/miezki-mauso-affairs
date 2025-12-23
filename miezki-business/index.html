@@ -486,27 +486,298 @@
       50% { transform: translateX(6px); }
     }
 
-    /* ============ PROCESS ============ */
-    .process { background: var(--gray-50); }
-    .process-header { text-align: center; margin-bottom: 72px; }
-    .process-header .section-subtitle { margin: 16px auto 0; }
-    .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; position: relative; }
-    
-    .process-grid::before {
-      content: '';
-      position: absolute;
-      top: 28px; 
-      left: 50px; 
-      right: 50px; 
-      height: 2px;
-      background: var(--gray-200); 
-      z-index: 0; 
+    /* ============ PROCESS - ELEGANT STEPPER ============ */
+    .process { 
+      background: var(--gray-50); 
+      padding: 140px 0;
     }
 
-    .process-step { text-align: center; position: relative; z-index: 1; }
-    .process-number { width: 56px; height: 56px; background: var(--accent-orange); border: 2px solid var(--white); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: var(--white); margin: 0 auto 20px; position: relative; box-shadow: 0 0 0 4px var(--gray-50); }
-    .process-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.01em; }
-    .process-text { font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+    .process-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .process-header { 
+      text-align: center; 
+      margin-bottom: 72px; 
+    }
+    
+    .process-header .section-title {
+      margin-bottom: 16px;
+    }
+
+    .process-header .section-subtitle { 
+      margin: 0 auto;
+      font-size: 17px;
+      color: var(--gray-500);
+      font-weight: 300;
+    }
+
+    /* Stepper Navigation */
+    .stepper-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 56px;
+      position: relative;
+    }
+
+    .stepper-line {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%;
+      height: 1px;
+      background: var(--gray-200);
+      z-index: 0;
+    }
+
+    .stepper-line-progress {
+      position: absolute;
+      top: 50%;
+      left: 20%;
+      transform: translateY(-50%);
+      height: 1px;
+      background: linear-gradient(90deg, #a78bfa 0%, var(--accent-orange) 100%);
+      z-index: 1;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 0%;
+    }
+
+    .stepper-dot {
+      width: 48px;
+      height: 48px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--gray-400);
+      position: relative;
+      z-index: 2;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      margin: 0 32px;
+    }
+
+    .stepper-dot:hover {
+      border-color: var(--gray-300);
+      color: var(--gray-600);
+    }
+
+    .stepper-dot.active {
+      border-color: transparent;
+      background: var(--white);
+      color: var(--gray-900);
+      font-weight: 600;
+      box-shadow: 0 0 0 1px #a78bfa, 0 8px 24px -4px rgba(167, 139, 250, 0.25);
+    }
+
+    .stepper-dot.completed {
+      background: linear-gradient(135deg, #a78bfa 0%, var(--accent-orange) 100%);
+      border-color: transparent;
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    /* Content Card */
+    .stepper-content {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 56px 64px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--gray-100);
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .stepper-content-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 48px;
+      align-items: center;
+      width: 100%;
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stepper-content-inner.transitioning {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .stepper-content-number {
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 1;
+      background: linear-gradient(135deg, #a78bfa 0%, var(--accent-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.2;
+    }
+
+    .stepper-content-body {
+      padding-right: 24px;
+    }
+
+    .stepper-content-title {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--gray-900);
+    }
+
+    .stepper-content-text {
+      font-size: 16px;
+      color: var(--gray-500);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* Navigation Buttons */
+    .stepper-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    .stepper-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 100px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      background: transparent;
+    }
+
+    .stepper-btn.prev {
+      color: var(--gray-500);
+    }
+
+    .stepper-btn.prev:hover:not(:disabled) {
+      color: var(--gray-900);
+    }
+
+    .stepper-btn.prev:disabled {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .stepper-btn.next {
+      background: var(--gray-900);
+      color: var(--white);
+      padding: 14px 20px 14px 28px;
+    }
+
+    .stepper-btn.next:hover:not(:disabled) {
+      background: var(--gray-800);
+      transform: translateX(4px);
+    }
+
+    .stepper-btn.next:disabled {
+      background: var(--gray-200);
+      color: var(--gray-400);
+      cursor: default;
+      transform: none;
+    }
+
+    .stepper-btn-arrow {
+      width: 32px;
+      height: 32px;
+      background: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stepper-btn-arrow svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gray-900);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .stepper-btn.next:disabled .stepper-btn-arrow {
+      background: var(--gray-300);
+    }
+
+    .stepper-btn.next:disabled .stepper-btn-arrow svg {
+      stroke: var(--gray-500);
+    }
+
+    .stepper-counter {
+      font-size: 13px;
+      color: var(--gray-400);
+      font-weight: 400;
+    }
+
+    .stepper-counter-current {
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .stepper-dot {
+        width: 40px;
+        height: 40px;
+        font-size: 13px;
+        margin: 0 16px;
+      }
+
+      .stepper-content {
+        padding: 40px 32px;
+      }
+
+      .stepper-content-inner {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        text-align: center;
+      }
+
+      .stepper-content-number {
+        font-size: 64px;
+      }
+
+      .stepper-content-body {
+        padding-right: 0;
+      }
+
+      .stepper-content-title {
+        font-size: 22px;
+      }
+
+      .stepper-buttons {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .stepper-btn.prev {
+        order: 2;
+      }
+
+      .stepper-counter {
+        order: 1;
+      }
+    }
 
     /* ============ PERSONAL ============ */
     .personal { padding: 140px 0; background: var(--white); }
@@ -1009,15 +1280,6 @@
     </div>
   </section>
 
-  <section class="typing-showcase">
-    <div class="container">
-      <div class="typing-showcase-container">
-        <p class="typing-showcase-text">
-          Wir trainieren <span class="typing-showcase-word" id="showcaseTyping">Kundengespräche</span><span class="typing-showcase-cursor"></span>
-        </p>
-      </div>
-    </div>
-  </section>
 
   <section class="services" id="leistungen">
     <div class="container">
@@ -1156,31 +1418,47 @@
 
   <section class="process" id="ablauf">
     <div class="container">
-      <div class="process-header reveal">
-        <p class="section-label">Ablauf</p>
-        <h2 class="section-title">Lassen Sie sich an die Hand nehmen</h2>
-        <p class="section-subtitle">Von der Anfrage bis zum ersten Kurstag in vier einfachen Schritten.</p>
-      </div>
-      <div class="process-grid">
-        <div class="process-step reveal">
-          <div class="process-number">1</div>
-          <h3 class="process-title">Bedarfsanalyse</h3>
-          <p class="process-text">Wir besprechen Ihre Anforderungen und Ziele.</p>
+      <div class="process-container">
+        <div class="process-header reveal">
+          <p class="section-label">Ablauf</p>
+          <h2 class="section-title">Lassen Sie sich an die <span class="serif-italic">Hand nehmen</span></h2>
+          <p class="section-subtitle">Von der Anfrage bis zum ersten Kurstag in vier einfachen Schritten.</p>
         </div>
-        <div class="process-step reveal">
-          <div class="process-number">2</div>
-          <h3 class="process-title">Angebot</h3>
-          <p class="process-text">Sie erhalten ein maßgeschneidertes Kurskonzept.</p>
+
+        <div class="stepper-nav">
+          <div class="stepper-line"></div>
+          <div class="stepper-line-progress" id="stepperProgress"></div>
+          <div class="stepper-dot active" data-step="0">1</div>
+          <div class="stepper-dot" data-step="1">2</div>
+          <div class="stepper-dot" data-step="2">3</div>
+          <div class="stepper-dot" data-step="3">4</div>
         </div>
-        <div class="process-step reveal">
-          <div class="process-number">3</div>
-          <h3 class="process-title">Einstufung</h3>
-          <p class="process-text">Wir testen das Sprachniveau Ihrer Mitarbeiter.</p>
+
+        <div class="stepper-content">
+          <div class="stepper-content-inner" id="stepContent">
+            <div class="stepper-content-number">01</div>
+            <div class="stepper-content-body">
+              <h3 class="stepper-content-title">Bedarfsanalyse</h3>
+              <p class="stepper-content-text">Wir besprechen Ihre Anforderungen, Ziele und den aktuellen Stand Ihres Teams. Gemeinsam finden wir heraus, was Sie wirklich brauchen.</p>
+            </div>
+          </div>
         </div>
-        <div class="process-step reveal">
-          <div class="process-number">4</div>
-          <h3 class="process-title">Kursstart</h3>
-          <p class="process-text">Der Unterricht beginnt – vor Ort oder online.</p>
+
+        <div class="stepper-buttons">
+          <button class="stepper-btn prev" id="prevBtn">
+            ← Zurück
+          </button>
+          
+          <span class="stepper-counter">
+            <span class="stepper-counter-current" id="currentStep">1</span> / 4
+          </span>
+
+          <button class="stepper-btn next" id="nextBtn">
+            Weiter
+            <span class="stepper-btn-arrow">
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+            </span>
+          </button>
         </div>
       </div>
     </div>
@@ -1250,6 +1528,16 @@
           </ul>
           <a href="#kontakt" class="btn btn-secondary">Anfragen</a>
         </div>
+      </div>
+    </div>
+  </section>
+  
+   <section class="typing-showcase">
+    <div class="container">
+      <div class="typing-showcase-container">
+        <p class="typing-showcase-text">
+          Wir trainieren <span class="typing-showcase-word" id="showcaseTyping">Kundengespräche</span><span class="typing-showcase-cursor"></span>
+        </p>
       </div>
     </div>
   </section>
@@ -1622,26 +1910,94 @@
 
     stats.forEach(stat => statsObserver.observe(stat));
 
-    // ============ PROCESS STEPS STAGGER ============
-    const processSteps = document.querySelectorAll('.process-step');
-    const processObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const index = Array.from(processSteps).indexOf(entry.target);
-          setTimeout(() => {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }, index * 100);
-        }
-      });
-    }, { threshold: 0.1 });
+    // ============ ELEGANT STEPPER ============
+    const steps = [
+      { number: '01', title: 'Bedarfsanalyse', text: 'Wir besprechen Ihre Anforderungen, Ziele und den aktuellen Stand Ihres Teams. Gemeinsam finden wir heraus, was Sie wirklich brauchen.' },
+      { number: '02', title: 'Angebot', text: 'Sie erhalten ein maßgeschneidertes Kurskonzept mit transparenten Konditionen. Keine versteckten Kosten, keine Überraschungen.' },
+      { number: '03', title: 'Einstufung', text: 'Wir testen das Sprachniveau Ihrer Mitarbeiter für die optimale Gruppeneinteilung. So lernt jeder auf seinem Level.' },
+      { number: '04', title: 'Kursstart', text: 'Der Unterricht beginnt – bei Ihnen vor Ort oder online.' }
+    ];
 
-    processSteps.forEach(step => {
-      step.style.opacity = '0';
-      step.style.transform = 'translateY(20px)';
-      step.style.transition = 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
-      processObserver.observe(step);
+    let currentStepIndex = 0;
+    const dots = document.querySelectorAll('.stepper-dot');
+    const progress = document.getElementById('stepperProgress');
+    const content = document.getElementById('stepContent');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const currentStepEl = document.getElementById('currentStep');
+
+    function updateStepper(animate = true) {
+      // Update dots
+      dots.forEach((dot, i) => {
+        dot.classList.remove('active', 'completed');
+        if (i < currentStepIndex) dot.classList.add('completed');
+        if (i === currentStepIndex) dot.classList.add('active');
+      });
+
+      // Update progress bar
+      const progressWidth = (currentStepIndex / (steps.length - 1)) * 60;
+      progress.style.width = progressWidth + '%';
+
+      // Update content with animation
+      if (animate) {
+        content.classList.add('transitioning');
+        setTimeout(() => {
+          updateStepContent();
+          content.classList.remove('transitioning');
+        }, 200);
+      } else {
+        updateStepContent();
+      }
+
+      // Update counter
+      currentStepEl.textContent = currentStepIndex + 1;
+
+      // Update buttons
+      prevBtn.disabled = currentStepIndex === 0;
+      
+      if (currentStepIndex === steps.length - 1) {
+        nextBtn.innerHTML = 'Fertig <span class="stepper-btn-arrow"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg></span>';
+        nextBtn.disabled = true;
+      } else {
+        nextBtn.innerHTML = 'Weiter <span class="stepper-btn-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></span>';
+        nextBtn.disabled = false;
+      }
+    }
+
+    function updateStepContent() {
+      const step = steps[currentStepIndex];
+      content.innerHTML = `
+        <div class="stepper-content-number">${step.number}</div>
+        <div class="stepper-content-body">
+          <h3 class="stepper-content-title">${step.title}</h3>
+          <p class="stepper-content-text">${step.text}</p>
+        </div>
+      `;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentStepIndex > 0) {
+        currentStepIndex--;
+        updateStepper();
+      }
     });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentStepIndex < steps.length - 1) {
+        currentStepIndex++;
+        updateStepper();
+      }
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        currentStepIndex = i;
+        updateStepper();
+      });
+    });
+
+    // Initialize stepper
+    updateStepper(false);
 
     // ============ BUTTON ARROW ANIMATION ============
     const arrowBtns = document.querySelectorAll('.btn-arrow');
